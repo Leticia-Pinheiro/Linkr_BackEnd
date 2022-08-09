@@ -1,4 +1,4 @@
-import connection from "../database/postgres.js";
+import connection from "../databases/postgres.js";
 
 const timelineRepositories = {
 
