@@ -1,4 +1,4 @@
-import dbRequest from "../repositories/index.js";
+import { createPost } from "../repositories/timelineRepository.js";
 
 export async function publishPost (req, res) {
 
@@ -6,7 +6,7 @@ export async function publishPost (req, res) {
 
     try {
 
-        await dbRequest.createPost(url, text);
+        await createPost(url, text);
 
         res.sendStatus(201);
 
