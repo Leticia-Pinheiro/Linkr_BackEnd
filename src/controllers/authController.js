@@ -24,8 +24,6 @@ export async function signinUser(req, res) {
 	try {
 		const { rows: user } = await searchUser(data.email);
 
-		console.log(user);
-
 		if (!user.length) return res.status(401).send("Usuário/senha inválidos!");
 
 		const token = generateToken(data.password, user);
