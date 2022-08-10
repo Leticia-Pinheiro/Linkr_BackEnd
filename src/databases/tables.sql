@@ -9,3 +9,14 @@ CREATE TABLE "public.users" (
 ) WITH (
   OIDS=FALSE
 );
+
+CREATE TABLE IF NOT EXISTS "posts" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"userId" INTEGER NOT NULL REFERENCES users(id),
+	"url" TEXT NOT NULL,
+	"text" TEXT,
+	"urlTitle" TEXT,
+	"urlImage" TEXT,
+	"urlDescription" TEXT,
+	"createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
