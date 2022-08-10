@@ -1,16 +1,32 @@
-import { createPost } from "../repositories/timelineRepository.js";
+import { createPost, getAllPosts } from "../repositories/timelineRepository.js";
+import urlMetadata from "url-metadata";
 
-export async function publishPost (req, res) {
+export async function publishPost(req, res) {
+	const { url, text } = req.body;
 
-    const { url, text } = req.body;
+	try {
+		const urlData = await urlMetadata(url);
 
-    try {
+		await createPost(
+			url,
+			text,
+			urlData.title,
+			urlData.image,
+			urlData.description
+		);
 
-        await createPost(url, text);
+		res.sendStatus(201);
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
 
-        res.sendStatus(201);
+export async function getPosts(req, res) {
+	try {
+		const { rows: posts } = await getAllPosts();
 
-    } catch (error) {
-        res.sendStatus(500);
-    }    
+		res.status(200).send(posts);
+	} catch (error) {
+		res.sendStatus(500);
+	}
 }
