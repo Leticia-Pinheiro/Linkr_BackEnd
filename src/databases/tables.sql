@@ -1,10 +1,10 @@
-CREATE TABLE "users" (
+CREATE TABLE "public.users" (
 	"id" serial NOT NULL,
-	"username" varchar(120) NOT NULL UNIQUE,
+	"username" varchar(120) NOT NULL,
 	"email" varchar(120) NOT NULL UNIQUE,
-	"password" TEXT NOT NULL,
+	"password" TEXT(100) NOT NULL,
 	"imageUrl" TEXT NOT NULL,
-	"createdAt" DATE NOT NULL DEFAULT 'NOW()',
+	"createdAt" TIMESTAMP NOT NULL DEFAULT 'NOW()',
 	CONSTRAINT "users_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
