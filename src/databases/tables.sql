@@ -15,5 +15,8 @@ CREATE TABLE IF NOT EXISTS "posts" (
 	"userId" INTEGER NOT NULL REFERENCES users(id),
 	"url" TEXT NOT NULL,
 	"text" TEXT,
+	"urlTitle" TEXT,
+	"urlImage" TEXT,
+	"urlDescription" TEXT,
 	"createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );

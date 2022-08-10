@@ -1,12 +1,12 @@
 import connection from "../databases/postgres.js";
 
-export async function createPost(url, text, title, image, description) {
+export async function createPost(userId, url, text, title, image, description) {
 	await connection.query(
 		`
-            INSERT INTO posts (url, text, "urlTitle", "urlImage", "urlDescription")
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO posts ("userId", url, text, "urlTitle", "urlImage", "urlDescription")
+            VALUES ($1, $2, $3, $4, $5, $6)
         `,
-		[url, text, title, image, description]
+		[userId, url, text, title, image, description]
 	);
 }
 
