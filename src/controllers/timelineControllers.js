@@ -3,11 +3,13 @@ import urlMetadata from "url-metadata";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
+	const { tokenDecoded } = res.locals;
 
 	try {
 		const urlData = await urlMetadata(url);
 
 		await createPost(
+			tokenDecoded.id,
 			url,
 			text,
 			urlData.title,
