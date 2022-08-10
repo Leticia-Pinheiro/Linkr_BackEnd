@@ -24,6 +24,8 @@ export async function signinUser(req, res) {
 	try {
 		const { rows: user } = await searchUser(data.email);
 
+		console.log(user);
+
 		if (!user.length) return res.status(401).send("Usuário/senha inválidos!");
 
 		const token = generateToken(data.password, user);
@@ -31,7 +33,7 @@ export async function signinUser(req, res) {
 		if (token === "error")
 			return res.status(401).send("Usuário/senha inválidos!");
 
-		res.status(200).send(token);
+		res.status(200).send({ token, image: user[0].imageUrl });
 	} catch (error) {
 		res.sendStatus(500);
 	}
