@@ -24,8 +24,12 @@ export async function publishPost(req, res) {
 }
 
 export async function getPosts(req, res) {
+
+
+	const { tokenDecoded } = res.locals;
+
 	try {
-		const { rows: posts } = await getAllPosts();
+		const { rows: posts } = await getAllPosts(tokenDecoded.id);
 
 		res.status(200).send(posts);
 	} catch (error) {

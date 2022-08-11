@@ -10,12 +10,17 @@ export async function createPost(userId, url, text, title, image, description) {
 	);
 }
 
-export async function getAllPosts() {
+export async function getAllPosts(id) {
 	return connection.query(`
-        SELECT posts.*, users.id, users.username, users."imageUrl" FROM posts
-        JOIN users
-        ON posts."userId" = users.id 
-        ORDER BY posts."createdAt" DESC
-        LIMIT 20
-    `);
+    SELECT 
+        COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
+        posts.*, 
+        users.username,
+        users."imageUrl"
+    FROM posts
+    JOIN users
+    ON posts."userId" = users.id 
+    ORDER BY posts."createdAt" DESC
+    LIMIT 20
+    `, [id]);
 }
