@@ -17,6 +17,7 @@ export async function getAllPosts(id) {
         COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
         posts.*, 
         users.username,
+        users.email,
         users."imageUrl"
     FROM posts
     JOIN users
