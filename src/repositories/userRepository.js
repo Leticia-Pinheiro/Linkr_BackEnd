@@ -10,6 +10,17 @@ export async function searchUser(email) {
 	);
 }
 
+
+export async function searchUserById(id) {
+	return connection.query(
+		`
+        SELECT * FROM users 
+        WHERE users.id = $1
+    `,
+		[id]
+	);
+}
+
 export async function searchUserById(idUser, idPost) {
 	return connection.query(
 		`

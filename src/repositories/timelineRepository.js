@@ -23,6 +23,21 @@ export async function getAllPosts(id) {
     ORDER BY posts."createdAt" DESC
     LIMIT 20
     `, [id]);
+
+}
+
+export async function getAllPostsFromUser(id) {
+	return connection.query(
+		`
+    SELECT posts.*, users.email, users.username, users."imageUrl" FROM posts
+    JOIN users
+    ON posts."userId" = users.id 
+    WHERE users.id = $1
+    ORDER BY posts."createdAt" DESC
+    LIMIT 20
+`,
+		[id]
+	);
 }
 
 export async function deleteQuery(id) {

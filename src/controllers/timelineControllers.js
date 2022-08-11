@@ -1,10 +1,12 @@
 import {
 	createPost,
 	getAllPosts,
+	getAllPostsFromUser,
 	deleteQuery,
 } from "../repositories/timelineRepository.js";
 import { searchUserById } from "../repositories/userRepository.js";
 import urlMetadata from "url-metadata";
+import { searchUserById } from "../repositories/userRepository.js";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
@@ -35,6 +37,23 @@ export async function getPosts(req, res) {
 
 	try {
 		const { rows: posts } = await getAllPosts(tokenDecoded.id);
+
+		res.status(200).send(posts);
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
+
+
+export async function getPostsFromUser(req, res) {
+	const { id } = req.params;
+
+	try {
+		const { rows: user } = await searchUserById(id);
+
+		if (!user.length) return res.sendStatus(404);
+
+		const { rows: posts } = await getAllPostsFromUser(id);
 
 		res.status(200).send(posts);
 	} catch (error) {
