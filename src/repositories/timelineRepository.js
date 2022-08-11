@@ -29,7 +29,7 @@ export async function getAllPosts(id) {
 	);
 }
 
-export async function getAllPostsFromUser(id) {
+export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost) {
 	return connection.query(
 		`
     SELECT COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked, posts.*, users.email, users.username, users."imageUrl" FROM posts
@@ -39,7 +39,7 @@ export async function getAllPostsFromUser(id) {
     ORDER BY posts."createdAt" DESC
     LIMIT 20
 `,
-		[id, id]
+		[idFromCurrentUser, idFromUserPost]
 	);
 }
 
