@@ -2,7 +2,9 @@ import {
 	createPost,
 	getAllPosts,
 	getAllPostsFromUser,
+	deleteQuery,
 } from "../repositories/timelineRepository.js";
+import { searchUserById } from "../repositories/userRepository.js";
 import urlMetadata from "url-metadata";
 import { searchUserById } from "../repositories/userRepository.js";
 
@@ -38,6 +40,7 @@ export async function getPosts(req, res) {
 	}
 }
 
+
 export async function getPostsFromUser(req, res) {
 	const { id } = req.params;
 
@@ -49,6 +52,23 @@ export async function getPostsFromUser(req, res) {
 		const { rows: posts } = await getAllPostsFromUser(id);
 
 		res.status(200).send(posts);
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
+
+export async function deletePost(req, res) {
+	const { tokenDecoded } = res.locals;
+	const { id } = req.params;
+
+	try {
+		const { rows: postFromUser } = await searchUserById(tokenDecoded.id, id);
+
+		if (!postFromUser.length) return res.sendStatus(401);
+
+		await deleteQuery(id);
+
+		res.sendStatus(204);
 	} catch (error) {
 		res.sendStatus(500);
 	}

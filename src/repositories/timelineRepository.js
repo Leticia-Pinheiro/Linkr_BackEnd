@@ -12,6 +12,7 @@ export async function createPost(userId, url, text, title, image, description) {
 
 export async function getAllPosts() {
 	return connection.query(`
+
         SELECT posts.*, users.email, users.username, users."imageUrl" FROM posts
         JOIN users
         ON posts."userId" = users.id 
@@ -30,6 +31,16 @@ export async function getAllPostsFromUser(id) {
     ORDER BY posts."createdAt" DESC
     LIMIT 20
 `,
+		[id]
+	);
+}
+
+export async function deleteQuery(id) {
+	return connection.query(
+		`
+        DELETE FROM posts
+        WHERE posts.id = $1
+    `,
 		[id]
 	);
 }
