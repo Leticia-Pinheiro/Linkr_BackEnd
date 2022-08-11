@@ -9,3 +9,13 @@ export async function searchUser(email) {
 		[email]
 	);
 }
+
+export async function searchUserById(id) {
+	return connection.query(
+		`
+        SELECT * FROM users 
+        WHERE users.id = $1
+    `,
+		[id]
+	);
+}
