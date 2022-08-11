@@ -24,3 +24,13 @@ export async function getAllPosts(id) {
     LIMIT 20
     `, [id]);
 }
+
+export async function deleteQuery(id) {
+	return connection.query(
+		`
+        DELETE FROM posts
+        WHERE posts.id = $1
+    `,
+		[id]
+	);
+}
