@@ -17,9 +17,10 @@ timelineRouter.post(
 	validateSchema(postSchema),
 	publishPost
 );
-timelineRouter.get("/posts", getPosts);
 
 timelineRouter.get("/posts/:id", getPostsFromUser);
+
+timelineRouter.get("/posts", verifyToken, getPosts);
 
 timelineRouter.delete("/posts/:id", verifyToken, deletePost);
 
