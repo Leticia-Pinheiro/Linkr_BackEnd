@@ -11,7 +11,8 @@ export async function createPost(userId, url, text, title, image, description) {
 }
 
 export async function getAllPosts(id) {
-	return connection.query(`
+	return connection.query(
+		`
     SELECT 
         COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
         posts.*, 
@@ -22,8 +23,9 @@ export async function getAllPosts(id) {
     ON posts."userId" = users.id 
     ORDER BY posts."createdAt" DESC
     LIMIT 20
-    `, [id]);
-
+    `,
+		[id]
+	);
 }
 
 export async function getAllPostsFromUser(id) {

@@ -4,9 +4,11 @@ import {
 	getAllPostsFromUser,
 	deleteQuery,
 } from "../repositories/timelineRepository.js";
-import { searchUserById } from "../repositories/userRepository.js";
+import {
+	searchUserById,
+	isPostFromUser,
+} from "../repositories/userRepository.js";
 import urlMetadata from "url-metadata";
-import { searchUserById } from "../repositories/userRepository.js";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
@@ -31,8 +33,6 @@ export async function publishPost(req, res) {
 }
 
 export async function getPosts(req, res) {
-
-
 	const { tokenDecoded } = res.locals;
 
 	try {
@@ -43,7 +43,6 @@ export async function getPosts(req, res) {
 		res.sendStatus(500);
 	}
 }
-
 
 export async function getPostsFromUser(req, res) {
 	const { id } = req.params;
@@ -66,7 +65,7 @@ export async function deletePost(req, res) {
 	const { id } = req.params;
 
 	try {
-		const { rows: postFromUser } = await searchUserById(tokenDecoded.id, id);
+		const { rows: postFromUser } = await isPostFromUser(tokenDecoded.id, id);
 
 		if (!postFromUser.length) return res.sendStatus(401);
 
