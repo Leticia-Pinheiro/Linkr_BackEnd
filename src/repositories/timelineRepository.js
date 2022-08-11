@@ -32,14 +32,14 @@ export async function getAllPosts(id) {
 export async function getAllPostsFromUser(id) {
 	return connection.query(
 		`
-    SELECT posts.*, users.email, users.username, users."imageUrl" FROM posts
+    SELECT COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked, posts.*, users.email, users.username, users."imageUrl" FROM posts
     JOIN users
     ON posts."userId" = users.id 
-    WHERE users.id = $1
+    WHERE users.id = $2
     ORDER BY posts."createdAt" DESC
     LIMIT 20
 `,
-		[id]
+		[id, id]
 	);
 }
 
