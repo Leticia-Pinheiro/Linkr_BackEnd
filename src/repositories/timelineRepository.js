@@ -10,9 +10,9 @@ export async function createPost(userId, url, text, title, image, description) {
 	);
 }
 
-export async function getAllPosts(id) {
+export async function getAllPosts() {
 	return connection.query(`
-        SELECT posts.*, users.id AS "idFromUser", users.email, users.username, users."imageUrl" FROM posts
+        SELECT posts.*, users.email, users.username, users."imageUrl" FROM posts
         JOIN users
         ON posts."userId" = users.id 
         ORDER BY posts."createdAt" DESC
@@ -23,7 +23,7 @@ export async function getAllPosts(id) {
 export async function getAllPostsFromUser(id) {
 	return connection.query(
 		`
-    SELECT posts.*, users.id AS "idFromUser", users.email, users.username, users."imageUrl" FROM posts
+    SELECT posts.*, users.email, users.username, users."imageUrl" FROM posts
     JOIN users
     ON posts."userId" = users.id 
     WHERE users.id = $1
