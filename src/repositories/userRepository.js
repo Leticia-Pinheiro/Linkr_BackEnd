@@ -10,7 +10,6 @@ export async function searchUser(email) {
 	);
 }
 
-
 export async function searchUserById(id) {
 	return connection.query(
 		`
@@ -21,7 +20,7 @@ export async function searchUserById(id) {
 	);
 }
 
-export async function searchUserById(idUser, idPost) {
+export async function isPostFromUser(idUser, idPost) {
 	return connection.query(
 		`
 	SELECT * FROM users
