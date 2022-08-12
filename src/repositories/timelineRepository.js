@@ -29,8 +29,6 @@ export async function createHashtag(name){
             VALUES ($1)`,
             [name]
         )
-    }
-        
-    
+    }   
     
 }
