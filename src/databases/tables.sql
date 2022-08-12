@@ -20,3 +20,8 @@ CREATE TABLE IF NOT EXISTS "posts" (
 	"urlDescription" TEXT,
 	"createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE "hashtags" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" TEXT NOT NULL UNIQUE
+);

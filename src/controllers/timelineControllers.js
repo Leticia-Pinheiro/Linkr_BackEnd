@@ -1,9 +1,11 @@
-import { createPost, getAllPosts } from "../repositories/timelineRepository.js";
+import { createPost, getAllPosts, createHashtag} from "../repositories/timelineRepository.js";
 import urlMetadata from "url-metadata";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
 	const { tokenDecoded } = res.locals;
+	const hashtag = text.match(/#\w+/g);
+	const hashtagArr = hashtag.map(hashtag => hashtag.slice(1))	
 
 	try {
 		const urlData = await urlMetadata(url);
@@ -15,12 +17,18 @@ export async function publishPost(req, res) {
 			urlData.title,
 			urlData.image,
 			urlData.description
-		);
-
+		);	
+		
+		hashtagArr.map(hashtag =>
+			createHashtag(
+				hashtag
+			)
+		)	
+		
 		res.sendStatus(201);
 	} catch (error) {
 		res.sendStatus(500);
-	}
+	}	
 }
 
 export async function getPosts(req, res) {

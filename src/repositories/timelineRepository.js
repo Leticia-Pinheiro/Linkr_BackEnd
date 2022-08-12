@@ -19,3 +19,18 @@ export async function getAllPosts() {
         LIMIT 20
     `);
 }
+
+export async function createHashtag(name){
+    const { rows : exist } = await connection.query(`SELECT * FROM hashtags WHERE name = $1`, [name])
+   
+    if(exist.length === 0){
+        await connection.query(
+            `INSERT INTO hashtags (name) 
+            VALUES ($1)`,
+            [name]
+        )
+    }
+        
+    
+    
+}
