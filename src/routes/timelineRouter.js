@@ -18,11 +18,10 @@ timelineRouter.post(
 	publishPost
 );
 
-timelineRouter.get("/posts/:id", getPostsFromUser);
+timelineRouter.get("/posts/:id", verifyToken, getPostsFromUser);
 
 timelineRouter.get("/posts", verifyToken, getPosts);
 
 timelineRouter.delete("/posts/:id", verifyToken, deletePost);
-
 
 export default timelineRouter;

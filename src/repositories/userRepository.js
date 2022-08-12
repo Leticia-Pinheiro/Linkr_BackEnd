@@ -31,3 +31,14 @@ export async function isPostFromUser(idUser, idPost) {
 		[idUser, idPost]
 	);
 }
+
+export async function searchUsers(str) {
+	return connection.query(
+		`
+		SELECT users.username, users."imageUrl", users.id 
+		FROM users 
+		WHERE to_tsvector(username) @@ to_tsquery($1 || ':*') 
+	`,
+		[str]
+	);
+}

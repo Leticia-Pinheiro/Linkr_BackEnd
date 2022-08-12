@@ -45,6 +45,7 @@ export async function getPosts(req, res) {
 }
 
 export async function getPostsFromUser(req, res) {
+	const { tokenDecoded } = res.locals;
 	const { id } = req.params;
 
 	try {
@@ -52,7 +53,7 @@ export async function getPostsFromUser(req, res) {
 
 		if (!user.length) return res.sendStatus(404);
 
-		const { rows: posts } = await getAllPostsFromUser(id);
+		const { rows: posts } = await getAllPostsFromUser(tokenDecoded.id, id);
 
 		res.status(200).send(posts);
 	} catch (error) {
