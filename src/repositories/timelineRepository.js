@@ -10,14 +10,47 @@ export async function createPost(userId, url, text, title, image, description) {
 	);
 }
 
-export async function getAllPosts() {
-	return connection.query(`
-        SELECT posts.*, users.id, users.username, users."imageUrl" FROM posts
-        JOIN users
-        ON posts."userId" = users.id 
-        ORDER BY posts."createdAt" DESC
-        LIMIT 20
-    `);
+export async function getAllPosts(id) {
+	return connection.query(
+		`
+    SELECT 
+        COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
+        posts.*, 
+        users.username,
+        users.email,
+        users."imageUrl"
+    FROM posts
+    JOIN users
+    ON posts."userId" = users.id 
+    ORDER BY posts."createdAt" DESC
+    LIMIT 20
+    `,
+		[id]
+	);
+}
+
+export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost) {
+	return connection.query(
+		`
+    SELECT COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked, posts.*, users.email, users.username, users."imageUrl" FROM posts
+    JOIN users
+    ON posts."userId" = users.id 
+    WHERE users.id = $2
+    ORDER BY posts."createdAt" DESC
+    LIMIT 20
+`,
+		[idFromCurrentUser, idFromUserPost]
+	);
+}
+
+export async function deleteQuery(id) {
+	return connection.query(
+		`
+        DELETE FROM posts
+        WHERE posts.id = $1
+    `,
+		[id]
+	);
 }
 
 export async function createHashtag(name){
