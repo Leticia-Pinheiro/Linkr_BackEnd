@@ -9,7 +9,6 @@ import {
 	isPostFromUser,
 } from "../repositories/userRepository.js";
 import urlMetadata from "url-metadata";
-import { getLikes } from "../repositories/likeRepository.js";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
