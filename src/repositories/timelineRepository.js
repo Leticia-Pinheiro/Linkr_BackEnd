@@ -18,7 +18,8 @@ export async function getAllPosts(id) {
       COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
       (SELECT COUNT(*) FROM likes WHERE likes."postId" = posts.id AND likes.liked = true) AS likes,
       (SELECT
-        ARRAY_AGG(CASE WHEN likes."userId" = $1 THEN 'You' ELSE u.username END) AS "whoLiked"
+        ARRAY_AGG((CASE WHEN likes."userId" = $1 THEN 'You' ELSE u.username END)
+        ORDER BY CASE WHEN likes."userId" = $1 THEN 1 ELSE 2 END) AS "whoLiked"
       FROM likes
       JOIN users as u
       ON likes."userId" = u.id
