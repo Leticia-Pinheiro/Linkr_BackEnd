@@ -24,19 +24,3 @@ export async function handleLike (userId, postId, likeStatus) {
         `, [userId, postId, true]);
     }
 }
-
-export async function getLikes (id) {
-
-    const { rows: likes } = await connection.query(`
-        SELECT posts.id, (CASE WHEN users.id = $1 THEN 'You' ELSE users.username END)
-        FROM posts
-        JOIN likes
-        ON posts.id = likes."postId"
-        LEFT JOIN users
-        ON users.id = likes."userId"
-        ORDER BY posts."createdAt" DESC
-        LIMIT 20
-    `, [id]);
-
-    return likes;
-}
