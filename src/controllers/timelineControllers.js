@@ -9,6 +9,7 @@ import {
 	isPostFromUser,
 } from "../repositories/userRepository.js";
 import urlMetadata from "url-metadata";
+import { getLikes } from "../repositories/likeRepository.js";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
@@ -37,7 +38,6 @@ export async function getPosts(req, res) {
 
 	try {
 		const { rows: posts } = await getAllPosts(tokenDecoded.id);
-
 		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);
