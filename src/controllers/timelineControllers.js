@@ -2,21 +2,24 @@ import {
 	createPost,
 	getAllPosts,
 	getAllPostsFromUser,
-	deleteQuery,
-	createHashtag
+	deleteQuery	
 } from "../repositories/timelineRepository.js";
+
+import {
+	createHashtag,
+	PostByHashtag
+} from "../repositories/hashtagRepository.js";
+
 import {
 	searchUserById,
 	isPostFromUser,
 } from "../repositories/userRepository.js";
-
 import urlMetadata from "url-metadata";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
-	const { tokenDecoded } = res.locals;
+	const { tokenDecoded } = res.locals;	
 	const hashtag = text.match(/#\w+/g);
-	const hashtagArr = hashtag.map(hashtag => hashtag.slice(1))	
 
 	try {
 		const urlData = await urlMetadata(url);
@@ -28,18 +31,32 @@ export async function publishPost(req, res) {
 			urlData.title,
 			urlData.image,
 			urlData.description
-		);	
-		
-		hashtagArr.map(hashtag =>
-			createHashtag(
-				hashtag
+		);
+
+		if(hashtag){
+			const hashtagArr = hashtag.map(hashtag => hashtag.slice(1))
+
+			hashtagArr.map(hashtag =>
+				createHashtag(
+					hashtag					
+				)						
 			)
-		)	
+
+			hashtagArr.map(hashtag =>
+				PostByHashtag(
+					hashtag,
+					tokenDecoded.id,
+					url,
+					text			
+				)						
+			)
+		}	
 		
+
 		res.sendStatus(201);
 	} catch (error) {
 		res.sendStatus(500);
-	}	
+	}
 }
 
 export async function getPosts(req, res) {
@@ -47,7 +64,6 @@ export async function getPosts(req, res) {
 
 	try {
 		const { rows: posts } = await getAllPosts(tokenDecoded.id);
-
 		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);

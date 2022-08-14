@@ -11,12 +11,7 @@ import verifyToken from "../middlewares/verifyToken.js";
 
 const timelineRouter = Router();
 
-timelineRouter.post(
-	"/timeline",
-	verifyToken,
-	validateSchema(postSchema),
-	publishPost
-);
+timelineRouter.post("/timeline", verifyToken, validateSchema(postSchema), publishPost);
 
 timelineRouter.get("/posts/:id", verifyToken, getPostsFromUser);
 

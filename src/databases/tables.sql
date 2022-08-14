@@ -28,7 +28,21 @@ CREATE TABLE IF NOT EXISTS "likes" (
 	"liked" BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE IF NOT EXISTS "hashtags" (
+CREATE TABLE "hashtags" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE "post_hashtag" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"post_id" INTEGER NOT NULL,
+	"hashtag_id" INTEGER NOT NULL 
+);
+
+CREATE TABLE "post_hashtag" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"hashtag" TEXT NOT NULL, 
+	"userId" INTEGER NOT NULL,	
+	"text" TEXT,
+	"url" TEXT NOT NULL
 );
