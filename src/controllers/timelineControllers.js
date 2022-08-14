@@ -2,7 +2,8 @@ import {
 	createPost,
 	getAllPosts,
 	getAllPostsFromUser,
-	deleteQuery,
+	deleteFromLikesQuery,
+	deleteFromPostsQuery,
 	updateText,
 } from "../repositories/timelineRepository.js";
 import {
@@ -70,7 +71,9 @@ export async function deletePost(req, res) {
 
 		if (!postFromUser.length) return res.sendStatus(401);
 
-		await deleteQuery(id);
+		await deleteFromLikesQuery(id);
+
+		await deleteFromPostsQuery(id);
 
 		res.sendStatus(204);
 	} catch (error) {
@@ -79,13 +82,11 @@ export async function deletePost(req, res) {
 }
 
 export async function updatePost(req, res) {
-	
 	const { tokenDecoded } = res.locals;
 	const { text } = req.body;
 	const { id } = req.params;
 
 	try {
-
 		const { rows: postFromUser } = await isPostFromUser(tokenDecoded.id, id);
 
 		if (!postFromUser.length) return res.sendStatus(401);
@@ -93,7 +94,6 @@ export async function updatePost(req, res) {
 		await updateText(id, text);
 
 		res.sendStatus(202);
-
 	} catch (error) {
 		res.sendStatus(500);
 	}
