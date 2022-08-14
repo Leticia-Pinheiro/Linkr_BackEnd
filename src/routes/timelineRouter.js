@@ -4,6 +4,7 @@ import {
 	getPosts,
 	getPostsFromUser,
 	deletePost,
+	updatePost,
 } from "../controllers/timelineControllers.js";
 import { validateSchema } from "../middlewares/schemasValidator.js";
 import postSchema from "../schemas/postSchema.js";
@@ -23,5 +24,7 @@ timelineRouter.get("/posts/:id", verifyToken, getPostsFromUser);
 timelineRouter.get("/posts", verifyToken, getPosts);
 
 timelineRouter.delete("/posts/:id", verifyToken, deletePost);
+
+timelineRouter.put("/posts/:id", verifyToken, updatePost);
 
 export default timelineRouter;

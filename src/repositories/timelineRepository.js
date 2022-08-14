@@ -73,3 +73,12 @@ export async function deleteQuery(id) {
 		[id]
 	);
 }
+
+export async function updateText (id, newText) {
+
+  await connection.query(`
+    UPDATE posts 
+    SET text = $2
+    WHERE posts.id = $1
+  `, [id, newText]);
+}
