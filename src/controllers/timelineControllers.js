@@ -84,22 +84,17 @@ export async function updatePost(req, res) {
 	const { text } = req.body;
 	const { id } = req.params;
 
-	console.log(tokenDecoded, text, id)
-
 	try {
-		console.log(1)
+
 		const { rows: postFromUser } = await isPostFromUser(tokenDecoded.id, id);
-		console.log(2)
+
 		if (!postFromUser.length) return res.sendStatus(401);
-		console.log(3)
 
 		await updateText(id, text);
-		console.log(4)
 
 		res.sendStatus(202);
-		console.log(5)
+
 	} catch (error) {
-		console.log(6)
 		res.sendStatus(500);
 	}
 }
