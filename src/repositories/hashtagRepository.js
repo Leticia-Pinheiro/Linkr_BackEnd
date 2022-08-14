@@ -18,8 +18,32 @@ export async function PostByHashtag(hashtag, token, url, text){
     await connection.query(
       `INSERT INTO post_hashtag (hashtag, "userId", text, url) VALUES ($1, $2, $3, $4)`, [hashtag, token, text, url]
   )
+}
 
-//   await connection.query(
-//     `INSERT INTO teste (name, text) VALUES ($1, $2)`, [name, text]
-// )
+export async function searchHashtag(hashtag) {
+	return connection.query(
+		`
+        SELECT * FROM hashtags 
+        WHERE name = $1
+    `,
+		[hashtag]
+	);
+}
+
+export async function getAllPostsFromHashtag(idFromCurrentUser, hashtag) {
+	return connection.query(
+		`
+        SELECT COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked, posts.*, users.email, users.username, users."imageUrl" FROM posts
+        JOIN users
+        ON posts."userId" = users.id
+        JOIN post_hashtag ph
+        ON posts."userId" = ph."userId" AND posts.url = ph.url AND posts.text = ph.text
+        JOIN hashtags
+        ON ph.hashtag = hashtags.name
+        WHERE hashtags.name = $2
+        ORDER BY posts."createdAt" DESC
+        LIMIT 20
+`,
+		[idFromCurrentUser, hashtag]
+	);
 }

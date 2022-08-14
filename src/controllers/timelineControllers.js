@@ -7,7 +7,9 @@ import {
 
 import {
 	createHashtag,
-	PostByHashtag
+	PostByHashtag,
+	searchHashtag,
+	getAllPostsFromHashtag
 } from "../repositories/hashtagRepository.js";
 
 import {
@@ -99,6 +101,23 @@ export async function deletePost(req, res) {
 		await deleteQuery(id);
 
 		res.sendStatus(204);
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
+
+export async function getPostsFromHashtag(req, res) {
+	const { tokenDecoded } = res.locals;
+	const { hashtag } = req.params;
+
+	try {
+		const { rows: infoHashtag } = await searchHashtag(hashtag);
+
+		if (!infoHashtag.length) return res.sendStatus(404);
+
+		const { rows: posts } = await getAllPostsFromHashtag(tokenDecoded.id, hashtag);
+
+		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);
 	}

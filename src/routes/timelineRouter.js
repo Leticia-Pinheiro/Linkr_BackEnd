@@ -4,6 +4,7 @@ import {
 	getPosts,
 	getPostsFromUser,
 	deletePost,
+	getPostsFromHashtag
 } from "../controllers/timelineControllers.js";
 import { validateSchema } from "../middlewares/schemasValidator.js";
 import postSchema from "../schemas/postSchema.js";
@@ -18,5 +19,7 @@ timelineRouter.get("/posts/:id", verifyToken, getPostsFromUser);
 timelineRouter.get("/posts", verifyToken, getPosts);
 
 timelineRouter.delete("/posts/:id", verifyToken, deletePost);
+
+timelineRouter.get("/hashtag/:hashtag", verifyToken, getPostsFromHashtag);
 
 export default timelineRouter;
