@@ -3,6 +3,7 @@ import {
 	getAllPosts,
 	getAllPostsFromUser,
 	deleteQuery,
+	updateText,
 } from "../repositories/timelineRepository.js";
 import {
 	searchUserById,
@@ -72,6 +73,27 @@ export async function deletePost(req, res) {
 		await deleteQuery(id);
 
 		res.sendStatus(204);
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
+
+export async function updatePost(req, res) {
+	
+	const { tokenDecoded } = res.locals;
+	const { text } = req.body;
+	const { id } = req.params;
+
+	try {
+
+		const { rows: postFromUser } = await isPostFromUser(tokenDecoded.id, id);
+
+		if (!postFromUser.length) return res.sendStatus(401);
+
+		await updateText(id, text);
+
+		res.sendStatus(202);
+
 	} catch (error) {
 		res.sendStatus(500);
 	}
