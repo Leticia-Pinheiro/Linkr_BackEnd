@@ -91,21 +91,33 @@ export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost) {
 	);
 }
 
-export async function deleteQuery(id) {
+export async function deleteFromLikesQuery(id) {
 	return connection.query(
 		`
-        DELETE FROM posts
-        WHERE posts.id = $1
+    DELETE FROM likes WHERE likes."postId" = $1;
+    
     `,
 		[id]
 	);
 }
 
-export async function updateText (id, newText) {
+export async function deleteFromPostsQuery(id) {
+	return connection.query(
+		`
+    
+    DELETE FROM posts WHERE posts.id = $1
+    `,
+		[id]
+	);
+}
 
-  await connection.query(`
+export async function updateText(id, newText) {
+	await connection.query(
+		`
     UPDATE posts 
     SET text = $2
     WHERE posts.id = $1
-  `, [id, newText]);
+  `,
+		[id, newText]
+	);
 }
