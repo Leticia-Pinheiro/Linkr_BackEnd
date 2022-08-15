@@ -1,8 +1,11 @@
 import {
 	createPost,
 	getAllPosts,
-	getAllPostsFromUser,
-	deleteQuery	
+	getAllPostsFromUser,	
+	deleteFromLikesQuery,
+	deleteFromPostsQuery,
+	updateText,
+
 } from "../repositories/timelineRepository.js";
 
 import {
@@ -99,9 +102,41 @@ export async function deletePost(req, res) {
 
 		if (!postFromUser.length) return res.sendStatus(401);
 
-		await deleteQuery(id);
+		await deleteFromLikesQuery(id);
+
+		await deleteFromPostsQuery(id);
 
 		res.sendStatus(204);
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
+
+export async function updatePost(req, res) {
+	const { tokenDecoded } = res.locals;
+	const { text } = req.body;
+	const { id } = req.params;
+
+	try {
+		const { rows: postFromUser } = await isPostFromUser(tokenDecoded.id, id);
+
+		if (!postFromUser.length) return res.sendStatus(401);
+
+		await updateText(id, text);
+
+		res.sendStatus(202);
+
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
+
+export async function getHashtags(req, res) {
+	const { tokenDecoded } = res.locals;
+
+	try {
+		const { rows: hashtags } = await getTags();
+		res.status(200).send(hashtags);				
 	} catch (error) {
 		res.sendStatus(500);
 	}
@@ -119,19 +154,10 @@ export async function getPostsFromHashtag(req, res) {
 		const { rows: posts } = await getAllPostsFromHashtag(tokenDecoded.id, hashtag);
 
 		res.status(200).send(posts);
+
 	} catch (error) {
 		res.sendStatus(500);
 	}
 }
 
-export async function getHashtags(req, res) {
-	const { tokenDecoded } = res.locals;
-
-	try {
-		const { rows: hashtags } = await getTags();
-		res.status(200).send(hashtags);
-	} catch (error) {
-		res.sendStatus(500);
-	}
-}
 

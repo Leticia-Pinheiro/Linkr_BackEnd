@@ -1,10 +1,10 @@
-CREATE TABLE "public.users" (
+CREATE TABLE "users" (
 	"id" serial NOT NULL,
 	"username" varchar(120) NOT NULL,
 	"email" varchar(120) NOT NULL UNIQUE,
-	"password" TEXT(100) NOT NULL,
+	"password" TEXT NOT NULL,
 	"imageUrl" TEXT NOT NULL,
-	"createdAt" TIMESTAMP NOT NULL DEFAULT 'NOW()',
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
 	CONSTRAINT "users_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -39,10 +39,3 @@ CREATE TABLE "post_hashtag" (
 	"hashtag_id" INTEGER NOT NULL 
 );
 
-CREATE TABLE "post_hashtag" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"hashtag" TEXT NOT NULL, 
-	"userId" INTEGER NOT NULL,	
-	"text" TEXT,
-	"url" TEXT NOT NULL
-);
