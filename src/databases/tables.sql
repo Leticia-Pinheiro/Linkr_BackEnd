@@ -35,7 +35,7 @@ CREATE TABLE "hashtags" (
 
 CREATE TABLE "post_hashtag" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"post_id" INTEGER NOT NULL,
-	"hashtag_id" INTEGER NOT NULL 
+	"post_id" INTEGER NOT NULL REFERENCES posts(id),
+	"hashtag_id" INTEGER NOT NULL REFERENCES hashtags(id) 
 );
 
