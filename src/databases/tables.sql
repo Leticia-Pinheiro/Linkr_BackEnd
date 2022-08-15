@@ -27,3 +27,15 @@ CREATE TABLE IF NOT EXISTS "likes" (
 	"postId" INTEGER NOT NULL REFERENCES posts(id),
 	"liked" BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+CREATE TABLE "hashtags" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE "post_hashtag" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"post_id" INTEGER NOT NULL,
+	"hashtag_id" INTEGER NOT NULL 
+);
+

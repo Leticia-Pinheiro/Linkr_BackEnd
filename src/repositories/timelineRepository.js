@@ -8,6 +8,7 @@ export async function createPost(userId, url, text, title, image, description) {
         `,
 		[userId, url, text, title, image, description]
 	);
+  
 }
 
 export async function getAllPosts(id) {
@@ -121,3 +122,4 @@ export async function updateText(id, newText) {
 		[id, newText]
 	);
 }
+
