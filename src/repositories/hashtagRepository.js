@@ -1,3 +1,4 @@
+import { getHashtags } from "../controllers/timelineControllers.js";
 import connection from "../databases/postgres.js";
 
 export async function createHashtag(name){
@@ -46,4 +47,15 @@ export async function getAllPostsFromHashtag(idFromCurrentUser, hashtag) {
 `,
 		[idFromCurrentUser, hashtag]
 	);
+}
+
+export async function getTags(){
+    return connection.query (`
+    SELECT hashtags.id, hashtags.name FROM hashtags
+    JOIN post_hashtag ph
+    ON ph.hashtag = hashtags.name
+    JOIN posts 
+    ON posts."userId" = ph."userId" AND posts.url = ph.url AND posts.text = ph.text
+    WHERE posts.id IS NOT NULL
+    LIMIT 10`);
 }

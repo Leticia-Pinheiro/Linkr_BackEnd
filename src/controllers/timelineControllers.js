@@ -9,7 +9,8 @@ import {
 	createHashtag,
 	PostByHashtag,
 	searchHashtag,
-	getAllPostsFromHashtag
+	getAllPostsFromHashtag,
+	getTags
 } from "../repositories/hashtagRepository.js";
 
 import {
@@ -122,3 +123,15 @@ export async function getPostsFromHashtag(req, res) {
 		res.sendStatus(500);
 	}
 }
+
+export async function getHashtags(req, res) {
+	const { tokenDecoded } = res.locals;
+
+	try {
+		const { rows: hashtags } = await getTags();
+		res.status(200).send(hashtags);
+	} catch (error) {
+		res.sendStatus(500);
+	}
+}
+
