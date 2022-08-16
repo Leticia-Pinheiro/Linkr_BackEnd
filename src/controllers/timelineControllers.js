@@ -43,7 +43,9 @@ export async function publishPost(req, res) {
 
 			hashtagArr.map((hashtag) => createHashtag(hashtag));
 
+
 			hashtagArr.map((hashtag) => PostByHashtag(hashtag, idFromNewPost[0].id));
+
 		}
 
 		res.sendStatus(201);
