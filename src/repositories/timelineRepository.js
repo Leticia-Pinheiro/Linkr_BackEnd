@@ -33,6 +33,8 @@ export async function getAllPosts(userId) {
     FROM posts
     JOIN users
     ON posts."userId" = users.id 
+    JOIN follow
+	ON follow."userId" <> users.id AND follow.following = (SELECT follow.following FROM follow WHERE follow."userId" = $1 and posts."userId" = follow."followingUserId")
     GROUP BY 
       posts.id, 
       posts."createdAt",

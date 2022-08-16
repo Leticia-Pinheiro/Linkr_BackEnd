@@ -29,3 +29,13 @@ export async function unfollow(userId, followingUserId) {
 		[userId, followingUserId]
 	);
 }
+
+export async function followersFromUser(id) {
+	return await connection.query(
+		`
+		SELECT * FROM follow
+		WHERE follow."userId" = $1
+	`,
+		[id]
+	);
+}
