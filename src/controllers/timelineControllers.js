@@ -1,11 +1,10 @@
 import {
 	createPost,
 	getAllPosts,
-	getAllPostsFromUser,	
+	getAllPostsFromUser,
 	deleteFromLikesQuery,
 	deleteFromPostsQuery,
 	updateText,
-
 } from "../repositories/timelineRepository.js";
 
 import {
@@ -13,7 +12,7 @@ import {
 	PostByHashtag,
 	searchHashtag,
 	getAllPostsFromHashtag,
-	getTags
+	getTags,
 } from "../repositories/hashtagRepository.js";
 
 import {
@@ -24,13 +23,13 @@ import urlMetadata from "url-metadata";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
-	const { tokenDecoded } = res.locals;	
+	const { tokenDecoded } = res.locals;
 	const hashtag = text.match(/#\w+/g);
 
 	try {
 		const urlData = await urlMetadata(url);
 
-		await createPost(
+		const { rows: idFromNewPost } = await createPost(
 			tokenDecoded.id,
 			url,
 			text,
@@ -39,25 +38,13 @@ export async function publishPost(req, res) {
 			urlData.description
 		);
 
-		if(hashtag){
-			const hashtagArr = hashtag.map(hashtag => hashtag.slice(1))
+		if (hashtag) {
+			const hashtagArr = hashtag.map((hashtag) => hashtag.slice(1));
 
-			hashtagArr.map(hashtag =>
-				createHashtag(
-					hashtag					
-				)						
-			)
+			hashtagArr.map((hashtag) => createHashtag(hashtag));
 
-			hashtagArr.map(hashtag =>
-				PostByHashtag(
-					hashtag,
-					tokenDecoded.id,
-					url,
-					text			
-				)						
-			)
-		}	
-		
+			hashtagArr.map((hashtag) => PostByHashtag(hashtag, idFromNewPost[0].id));
+		}
 
 		res.sendStatus(201);
 	} catch (error) {
@@ -70,6 +57,7 @@ export async function getPosts(req, res) {
 
 	try {
 		const { rows: posts } = await getAllPosts(tokenDecoded.id);
+
 		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);
@@ -125,18 +113,16 @@ export async function updatePost(req, res) {
 		await updateText(id, text);
 
 		res.sendStatus(202);
-
 	} catch (error) {
 		res.sendStatus(500);
 	}
 }
 
 export async function getHashtags(req, res) {
-	const { tokenDecoded } = res.locals;
-
 	try {
 		const { rows: hashtags } = await getTags();
-		res.status(200).send(hashtags);				
+
+		res.status(200).send(hashtags);
 	} catch (error) {
 		res.sendStatus(500);
 	}
@@ -151,13 +137,13 @@ export async function getPostsFromHashtag(req, res) {
 
 		if (!infoHashtag.length) return res.sendStatus(404);
 
-		const { rows: posts } = await getAllPostsFromHashtag(tokenDecoded.id, hashtag);
+		const { rows: posts } = await getAllPostsFromHashtag(
+			tokenDecoded.id,
+			hashtag
+		);
 
 		res.status(200).send(posts);
-
 	} catch (error) {
 		res.sendStatus(500);
 	}
 }
-
-
