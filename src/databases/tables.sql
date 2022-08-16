@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "posts" (
 	"urlTitle" TEXT,
 	"urlImage" TEXT,
 	"urlDescription" TEXT,
-	"createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS "likes" (
@@ -38,4 +38,3 @@ CREATE TABLE "post_hashtag" (
 	"post_id" INTEGER NOT NULL REFERENCES posts(id),
 	"hashtag_id" INTEGER NOT NULL REFERENCES hashtags(id) 
 );
-
