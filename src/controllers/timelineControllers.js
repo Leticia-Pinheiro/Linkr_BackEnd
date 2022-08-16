@@ -29,7 +29,7 @@ export async function publishPost(req, res) {
 	try {
 		const urlData = await urlMetadata(url);
 
-		await createPost(
+		const { rows: idFromNewPost } = await createPost(
 			tokenDecoded.id,
 			url,
 			text,
@@ -43,9 +43,9 @@ export async function publishPost(req, res) {
 
 			hashtagArr.map((hashtag) => createHashtag(hashtag));
 
-			hashtagArr.map((hashtag) =>
-				PostByHashtag(hashtag, tokenDecoded.id, url, text)
-			);
+
+			hashtagArr.map((hashtag) => PostByHashtag(hashtag, idFromNewPost[0].id));
+
 		}
 
 		res.sendStatus(201);
@@ -59,6 +59,7 @@ export async function getPosts(req, res) {
 
 	try {
 		const { rows: posts } = await getAllPosts(tokenDecoded.id);
+
 		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);
@@ -122,6 +123,7 @@ export async function updatePost(req, res) {
 export async function getHashtags(req, res) {
 	try {
 		const { rows: hashtags } = await getTags();
+
 		res.status(200).send(hashtags);
 	} catch (error) {
 		res.sendStatus(500);

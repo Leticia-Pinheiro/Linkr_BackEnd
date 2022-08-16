@@ -1,10 +1,12 @@
 import connection from "../databases/postgres.js";
 
 export async function createPost(userId, url, text, title, image, description) {
-	await connection.query(
+	return await connection.query(
 		`
             INSERT INTO posts ("userId", url, text, "urlTitle", "urlImage", "urlDescription")
             VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING id
+            
         `,
 		[userId, url, text, title, image, description]
 	);
