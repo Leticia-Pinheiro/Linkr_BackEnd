@@ -17,10 +17,12 @@ export async function PostByHashtag(hashtag, idPost) {
 		[hashtag]
 	);
 
-	await connection.query(
-		`INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`,
-		[idPost, idHashtag[0].id]
-	);
+	if (idHashtag.length) {
+		await connection.query(
+			`INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`,
+			[idPost, idHashtag[0].id]
+		);
+	}
 }
 
 export async function searchHashtag(hashtag) {
@@ -90,4 +92,14 @@ export async function getTags() {
         ORDER BY "postId" DESC
         LIMIT 10
     `);
+}
+
+export async function deleteFromHashtagQuery(idPost) {
+	return await connection.query(
+		`
+    DELETE FROM post_hashtag
+    WHERE post_id = $1
+  `,
+		[idPost]
+	);
 }

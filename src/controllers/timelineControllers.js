@@ -13,6 +13,7 @@ import {
 	searchHashtag,
 	getAllPostsFromHashtag,
 	getTags,
+	deleteFromHashtagQuery,
 } from "../repositories/hashtagRepository.js";
 
 import {
@@ -43,9 +44,7 @@ export async function publishPost(req, res) {
 
 			hashtagArr.map((hashtag) => createHashtag(hashtag));
 
-
 			hashtagArr.map((hashtag) => PostByHashtag(hashtag, idFromNewPost[0].id));
-
 		}
 
 		res.sendStatus(201);
@@ -93,6 +92,8 @@ export async function deletePost(req, res) {
 		if (!postFromUser.length) return res.sendStatus(401);
 
 		await deleteFromLikesQuery(id);
+
+		await deleteFromHashtagQuery(id);
 
 		await deleteFromPostsQuery(id);
 
