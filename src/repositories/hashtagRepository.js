@@ -93,3 +93,13 @@ export async function getTags() {
         LIMIT 10
     `);
 }
+
+export async function deleteFromHashtagQuery(idPost) {
+	return await connection.query(
+		`
+    DELETE FROM post_hashtag
+    WHERE post_id = $1
+  `,
+		[idPost]
+	);
+}
