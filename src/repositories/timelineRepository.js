@@ -8,7 +8,6 @@ export async function createPost(userId, url, text, title, image, description) {
         `,
 		[userId, url, text, title, image, description]
 	);
-  
 }
 
 export async function getAllPosts(id) {
@@ -56,6 +55,7 @@ export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost) {
 		`
     SELECT 
       posts.*, 
+      COALESCE((SELECT follow.following from follow WHERE follow."userId" = $1 AND follow."followingUserId" = $2), false) AS following,
       COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
       (SELECT COUNT(*) FROM likes WHERE likes."postId" = posts.id AND likes.liked = true) AS likes,
       (SELECT
@@ -122,4 +122,3 @@ export async function updateText(id, newText) {
 		[id, newText]
 	);
 }
-

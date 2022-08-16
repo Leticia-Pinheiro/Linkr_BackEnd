@@ -31,7 +31,9 @@ export async function signinUser(req, res) {
 		if (token === "error")
 			return res.status(401).send("Usuário/senha inválidos!");
 
-		res.status(200).send({ token, image: user[0].imageUrl });
+		res
+			.status(200)
+			.send({ token, image: user[0].imageUrl, username: user[0].username });
 	} catch (error) {
 		res.sendStatus(500);
 	}
