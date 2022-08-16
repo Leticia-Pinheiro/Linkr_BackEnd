@@ -17,10 +17,12 @@ export async function PostByHashtag(hashtag, idPost) {
 		[hashtag]
 	);
 
-	await connection.query(
-		`INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`,
-		[idPost, idHashtag[0].id]
-	);
+	if (idHashtag.length) {
+		await connection.query(
+			`INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`,
+			[idPost, idHashtag[0].id]
+		);
+	}
 }
 
 export async function searchHashtag(hashtag) {
