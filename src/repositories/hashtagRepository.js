@@ -1,23 +1,28 @@
 import connection from "../databases/postgres.js";
 
-export async function createHashtag(name){
-    const { rows : exist } = await connection.query(`SELECT * FROM hashtags WHERE name = $1`, [name])
-   
-    if(exist.length === 0){
-        await connection.query(
-            `INSERT INTO hashtags (name) VALUES ($1)`, [name]
-        )
-    }   
-    
+export async function createHashtag(name) {
+	const { rows: exist } = await connection.query(
+		`SELECT * FROM hashtags WHERE name = $1`,
+		[name]
+	);
+
+	if (exist.length === 0) {
+		await connection.query(`INSERT INTO hashtags (name) VALUES ($1)`, [name]);
+	}
 }
 
-export async function PostByHashtag(hashtag, token, url, text){
-    const {rows : idPost} = await connection.query(`SELECT (id) FROM posts WHERE "userId" = $1 AND text = $2 AND url = $3`, [token, text, url])
-    const {rows : idHashtag} = await connection.query(`SELECT (id) FROM hashtags WHERE name = $1`, [hashtag])  
-        
-    await connection.query(      
-      `INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`, [idPost[0].id, idHashtag[0].id]
-  )
+export async function PostByHashtag(hashtag, idPost) {
+	const { rows: idHashtag } = await connection.query(
+		`SELECT (id) FROM hashtags WHERE name = $1`,
+		[hashtag]
+	);
+
+	if (idHashtag.length) {
+		await connection.query(
+			`INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`,
+			[idPost, idHashtag[0].id]
+		);
+	}
 }
 
 export async function searchHashtag(hashtag) {
@@ -73,11 +78,10 @@ export async function getAllPostsFromHashtag(idFromCurrentUser, hashtag) {
 `,
 		[idFromCurrentUser, hashtag]
 	);
-    
 }
 
-export async function getTags(){
-    return await connection.query (`
+export async function getTags() {
+	return await connection.query(`
         SELECT h.name, COUNT (p.id) as "postId"
         FROM post_hashtag ph
         JOIN posts p 
@@ -90,3 +94,12 @@ export async function getTags(){
     `);
 }
 
+export async function deleteFromHashtagQuery(idPost) {
+	return await connection.query(
+		`
+    DELETE FROM post_hashtag
+    WHERE post_id = $1
+  `,
+		[idPost]
+	);
+}

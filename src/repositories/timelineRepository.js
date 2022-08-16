@@ -1,14 +1,15 @@
 import connection from "../databases/postgres.js";
 
 export async function createPost(userId, url, text, title, image, description) {
-	await connection.query(
+	return await connection.query(
 		`
             INSERT INTO posts ("userId", url, text, "urlTitle", "urlImage", "urlDescription")
             VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING id
+            
         `,
 		[userId, url, text, title, image, description]
 	);
-  
 }
 
 export async function getAllPosts(userId) {
@@ -56,6 +57,7 @@ export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost) {
 		`
     SELECT 
       posts.*, 
+      COALESCE((SELECT follow.following from follow WHERE follow."userId" = $1 AND follow."followingUserId" = $2), false) AS following,
       COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
       (SELECT COUNT(*) FROM likes WHERE likes."postId" = posts.id AND likes.liked = true) AS likes,
       (SELECT
@@ -165,4 +167,3 @@ export async function recentPosts (userId, lastPostCreatedAt) {
 
   return post;
 }
-
