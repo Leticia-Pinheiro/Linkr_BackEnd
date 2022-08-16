@@ -1,3 +1,5 @@
+import urlMetadata from "url-metadata";
+
 import {
 	createPost,
 	getAllPosts,
@@ -20,7 +22,8 @@ import {
 	searchUserById,
 	isPostFromUser,
 } from "../repositories/userRepository.js";
-import urlMetadata from "url-metadata";
+
+import { followersFromUser } from "../repositories/followRepository.js";
 
 export async function publishPost(req, res) {
 	const { url, text } = req.body;
@@ -59,7 +62,9 @@ export async function getPosts(req, res) {
 	try {
 		const { rows: posts } = await getAllPosts(tokenDecoded.id);
 
-		res.status(200).send(posts);
+		const { rows: followers } = await followersFromUser(tokenDecoded.id);
+
+		res.status(200).send({ posts, followers });
 	} catch (error) {
 		res.sendStatus(500);
 	}
