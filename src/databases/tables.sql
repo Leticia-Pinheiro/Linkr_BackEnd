@@ -40,9 +40,9 @@ CREATE TABLE "post_hashtag" (
 );
 
 CREATE TABLE follow (
-    id integer NOT NULL,
-    "userId" integer NOT NULL,
-    "followingUserId" integer NOT NULL,
+    id serial PRIMARY KEY NOT NULL,
+    "userId" integer NOT NULL REFERENCES users(id),
+    "followingUserId" integer NOT NULL REFERENCES users(id),
     following boolean DEFAULT false NOT NULL,
     "createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
