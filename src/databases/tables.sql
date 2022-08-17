@@ -49,10 +49,12 @@ CREATE TABLE follow (
 
 CREATE TABLE "repost" (
 	"id" serial NOT NULL,
+	"repostFrom" text NOT NULL,
 	"userId" int NOT NULL REFERENCES "users"("id"),
-	"postId" int NOT NULL "posts"("id"),
+	"postId" int NOT NULL REFERENCES "posts"("id"),
 	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
 	CONSTRAINT "repost_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
+
