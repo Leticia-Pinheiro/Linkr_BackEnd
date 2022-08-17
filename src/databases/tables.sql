@@ -46,3 +46,15 @@ CREATE TABLE follow (
     following boolean DEFAULT false NOT NULL,
     "createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
+
+CREATE TABLE "repost" (
+	"id" serial NOT NULL,
+	"repostFrom" text NOT NULL,
+	"userId" int NOT NULL REFERENCES "users"("id"),
+	"postId" int NOT NULL REFERENCES "posts"("id"),
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+	CONSTRAINT "repost_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
