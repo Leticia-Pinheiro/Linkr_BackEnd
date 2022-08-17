@@ -33,7 +33,12 @@ export async function signinUser(req, res) {
 
 		res
 			.status(200)
-			.send({ token, image: user[0].imageUrl, username: user[0].username });
+			.send({
+				token,
+				image: user[0].imageUrl,
+				username: user[0].username,
+				userId: user[0].id,
+			});
 	} catch (error) {
 		res.sendStatus(500);
 	}

@@ -16,25 +16,30 @@ export async function getAllPosts(userId) {
 	return connection.query(
 		`
     SELECT 
+	  repost."repostFrom",
+	  repost."userId" AS "repostFromId",
+	  repost."postId" AS "repostId",
       posts.*, 
-      COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
+      COALESCE((SELECT likes.liked FROM likes WHERE likes."userId" = $1 AND likes."postId" = posts.id), false) AS liked,
       (SELECT COUNT(*) FROM likes WHERE likes."postId" = posts.id AND likes.liked = true) AS likes,
       (SELECT
         ARRAY_AGG((CASE WHEN likes."userId" = $1 THEN 'You' ELSE u.username END)
         ORDER BY CASE WHEN likes."userId" = $1 THEN 1 ELSE 2 END) AS "whoLiked"
       FROM likes
-      JOIN users as u
+      JOIN users AS u
       ON likes."userId" = u.id
       WHERE likes."postId" = posts.id AND likes.liked = true
       GROUP BY posts.id),
       users.username,
       users.email,
       users."imageUrl"
-    FROM posts
-    JOIN users
-    ON posts."userId" = users.id 
+    FROM repost
+    JOIN posts
+    ON posts.id = repost."postId"
+    JOIN users 
+    ON users.id = posts."userId"
     JOIN follow
-	ON follow."userId" <> users.id AND follow.following = (SELECT follow.following FROM follow WHERE follow."userId" = $1 and posts."userId" = follow."followingUserId")
+    ON follow."followingUserId" = users.id
     GROUP BY 
       posts.id, 
       posts."createdAt",
@@ -46,8 +51,39 @@ export async function getAllPosts(userId) {
       posts."urlDescription",
       users.username,
       users.email,
+      users."imageUrl",
+	  repost."repostFrom",
+	  repost."userId",
+	  repost."postId"
+
+	  UNION
+	
+	  SELECT 
+	  NULL,
+	  NULL,
+	  NULL,
+	  posts.*, 
+      COALESCE((SELECT likes.liked FROM likes WHERE likes."userId" = $1 AND likes."postId" = posts.id), false) AS liked,
+      (SELECT COUNT(*) FROM likes WHERE likes."postId" = posts.id AND likes.liked = true) AS likes,
+      (SELECT
+        ARRAY_AGG((CASE WHEN likes."userId" = $1 THEN 'You' ELSE u.username END)
+        ORDER BY CASE WHEN likes."userId" = $1 THEN 1 ELSE 2 END) AS "whoLiked"
+      FROM likes
+      JOIN users AS u
+      ON likes."userId" = u.id
+      WHERE likes."postId" = posts.id AND likes.liked = true
+      GROUP BY posts.id),
+      users.username,
+      users.email,
       users."imageUrl"
-    ORDER BY posts."createdAt" DESC
+	  FROM follow
+	  JOIN posts
+	  ON posts."userId" = follow."followingUserId"
+	  JOIN users
+	  ON users.id = follow."followingUserId"
+	  WHERE follow."userId" = $1
+
+    ORDER BY "createdAt" DESC
     LIMIT 20
     `,
 		[userId]
@@ -127,9 +163,9 @@ export async function updateText(id, newText) {
 	);
 }
 
-export async function recentPosts (userId, lastPostCreatedAt) {
-
-  const post = await connection.query(`
+export async function recentPosts(userId, lastPostCreatedAt) {
+	const post = await connection.query(
+		`
     SELECT 
       posts.*, 
       COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
@@ -166,8 +202,8 @@ export async function recentPosts (userId, lastPostCreatedAt) {
     ORDER BY posts."createdAt" DESC
     LIMIT 20
     `,
-    [userId, lastPostCreatedAt]
-  );
+		[userId, lastPostCreatedAt]
+	);
 
-  return post;
+	return post;
 }
