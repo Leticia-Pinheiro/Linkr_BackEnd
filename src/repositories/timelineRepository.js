@@ -150,7 +150,7 @@ export async function recentPosts (userId, lastPostCreatedAt) {
     ON posts."userId" = users.id 
     JOIN follow
 	  ON follow."userId" <> users.id AND follow.following = (SELECT follow.following FROM follow WHERE follow."userId" = $1 and posts."userId" = follow."followingUserId")
-    WHERE posts."createdAt" > timestamp $2
+    WHERE posts."createdAt" > $2::timestamp
     GROUP BY 
       posts.id, 
       posts."createdAt",
