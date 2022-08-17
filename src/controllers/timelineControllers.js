@@ -7,7 +7,7 @@ import {
 	deleteFromLikesQuery,
 	deleteFromPostsQuery,
 	updateText,
-	recentPosts
+	recentPosts,
 } from "../repositories/timelineRepository.js";
 
 import {
@@ -157,20 +157,18 @@ export async function getPostsFromHashtag(req, res) {
 	}
 }
 
-export async function getRecentPosts (req, res) {
-
+export async function getRecentPosts(req, res) {
 	const { tokenDecoded } = res.locals;
 	const { lastPostCreatedAt } = req.body;
 
 	try {
+		const { rows: posts } = await recentPosts(
+			tokenDecoded.id,
+			lastPostCreatedAt
+		);
 
-		const { rows: posts} = await recentPosts(tokenDecoded.id, lastPostCreatedAt);
-
-		res.status(200).send(posts)
-
+		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);
 	}
-
-	
 }

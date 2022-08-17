@@ -38,3 +38,21 @@ CREATE TABLE "post_hashtag" (
 	"post_id" INTEGER NOT NULL REFERENCES posts(id),
 	"hashtag_id" INTEGER NOT NULL REFERENCES hashtags(id) 
 );
+
+CREATE TABLE follow (
+    id serial PRIMARY KEY NOT NULL,
+    "userId" integer NOT NULL REFERENCES users(id),
+    "followingUserId" integer NOT NULL REFERENCES users(id),
+    following boolean DEFAULT false NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL
+);
+
+CREATE TABLE "repost" (
+	"id" serial NOT NULL,
+	"userId" int NOT NULL REFERENCES "users"("id"),
+	"postId" int NOT NULL "posts"("id"),
+	"createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+	CONSTRAINT "repost_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
