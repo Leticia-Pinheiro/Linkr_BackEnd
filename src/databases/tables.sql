@@ -38,3 +38,11 @@ CREATE TABLE "post_hashtag" (
 	"post_id" INTEGER NOT NULL REFERENCES posts(id),
 	"hashtag_id" INTEGER NOT NULL REFERENCES hashtags(id) 
 );
+
+CREATE TABLE follow (
+    id serial PRIMARY KEY NOT NULL,
+    "userId" integer NOT NULL REFERENCES users(id),
+    "followingUserId" integer NOT NULL REFERENCES users(id),
+    following boolean DEFAULT false NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL
+);
