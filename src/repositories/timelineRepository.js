@@ -150,7 +150,7 @@ export async function recentPosts (userId, lastPostCreatedAt) {
     ON posts."userId" = users.id 
     JOIN follow
 	  ON follow."userId" <> users.id AND follow.following = (SELECT follow.following FROM follow WHERE follow."userId" = $1 and posts."userId" = follow."followingUserId")
-    WHERE posts."createdAt" > $2
+    WHERE posts."createdAt" > timestamp $2
     GROUP BY 
       posts.id, 
       posts."createdAt",
@@ -166,7 +166,7 @@ export async function recentPosts (userId, lastPostCreatedAt) {
     ORDER BY posts."createdAt" DESC
     LIMIT 20
     `,
-    [userId, lastPostCreatedAt]
+    [userId, lastPostCreatedAt.replace('T', ' ').replace('Z', '')]
   );
 
   return post;
