@@ -166,7 +166,7 @@ export async function recentPosts (userId, lastPostCreatedAt) {
     ORDER BY posts."createdAt" DESC
     LIMIT 20
     `,
-    [userId, lastPostCreatedAt.replace('T', ' ').replace('Z', '')]
+    [userId, lastPostCreatedAt]
   );
 
   return post;
