@@ -12,12 +12,14 @@ export async function createHashtag(name) {
 }
 
 export async function PostByHashtag(hashtag, idPost) {
+	console.log(hashtag + " > " + idPost);
 	const { rows: idHashtag } = await connection.query(
 		`SELECT (id) FROM hashtags WHERE name = $1`,
 		[hashtag]
 	);
-
+	console.log(idHashtag);
 	if (idHashtag.length) {
+		console.log("a");
 		await connection.query(
 			`INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`,
 			[idPost, idHashtag[0].id]
@@ -38,43 +40,43 @@ export async function searchHashtag(hashtag) {
 export async function getAllPostsFromHashtag(idFromCurrentUser, hashtag) {
 	return await connection.query(
 		`
-        SELECT 
+      SELECT 
       posts.*, 
-      COALESCE((select likes.liked from likes where likes."userId" = $1 and likes."postId" = posts.id), false) As liked,
+      COALESCE((SELECT likes.liked FROM likes WHERE likes."userId" = $1 AND likes."postId" = posts.id), false) AS liked,
       (SELECT COUNT(*) FROM likes WHERE likes."postId" = posts.id AND likes.liked = true) AS likes,
-      (SELECT
-        ARRAY_AGG((CASE WHEN likes."userId" = $1 THEN 'You' ELSE u.username END)
-        ORDER BY CASE WHEN likes."userId" = $1 THEN 1 ELSE 2 END) AS "whoLiked"
-      FROM likes
-      JOIN users as u
-      ON likes."userId" = u.id
-      WHERE likes."postId" = posts.id AND likes.liked = true
-      GROUP BY posts.id),
+        (SELECT
+          ARRAY_AGG((CASE WHEN likes."userId" = $1 THEN 'You' ELSE u.username END)
+          ORDER BY CASE WHEN likes."userId" = $1 THEN 1 ELSE 2 END) AS "whoLiked"
+        FROM likes
+        JOIN users AS u
+        ON likes."userId" = u.id
+        WHERE likes."postId" = posts.id AND likes.liked = true
+        GROUP BY posts.id),
       users.username,
       users.email,
       users."imageUrl"
-    FROM posts
-    JOIN users
-    ON posts."userId" = users.id 
-    JOIN post_hashtag ph
-    ON posts.id = ph.post_id 
-    JOIN hashtags
-    ON ph.hashtag_id = hashtags.id
-	WHERE hashtags.name = $2
-    GROUP BY 
-      posts.id, 
-      posts."createdAt",
-      posts."userId",
-      posts.url,
-      posts.text,
-      posts."urlTitle",
-      posts."urlImage",
-      posts."urlDescription",
-      users.username,
-      users.email,
-      users."imageUrl"
-    ORDER BY posts."createdAt" DESC
-    LIMIT 20
+      FROM posts
+      JOIN users
+      ON posts."userId" = users.id 
+      JOIN post_hashtag ph
+      ON posts.id = ph.post_id 
+      JOIN hashtags
+      ON ph.hashtag_id = hashtags.id
+      WHERE hashtags.name = $2
+      GROUP BY 
+        posts.id, 
+        posts."createdAt",
+        posts."userId",
+        posts.url,
+        posts.text,
+        posts."urlTitle",
+        posts."urlImage",
+        posts."urlDescription",
+        users.username,
+        users.email,
+        users."imageUrl"
+      ORDER BY posts."createdAt" DESC
+      LIMIT 20
 `,
 		[idFromCurrentUser, hashtag]
 	);
