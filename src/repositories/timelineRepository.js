@@ -170,6 +170,7 @@ export async function updateText(id, newText) {
 }
 
 export async function recentPosts(userId, lastPostCreatedAt) {
+  console.log(lastPostCreatedAt.replace('T', ' ').replace('Z', '') + '1')
 	const post = await connection.query(
 		`
     (SELECT 
@@ -245,7 +246,7 @@ export async function recentPosts(userId, lastPostCreatedAt) {
       ORDER BY "createdAt" DESC)
       ORDER BY "createdAt" DESC
     `,
-		[userId, lastPostCreatedAt.replace('T', ' ').replace('Z', '')]
+		[userId, lastPostCreatedAt.replace('T', ' ').replace('Z', '') + '999']
 	);
 
 	return post;
