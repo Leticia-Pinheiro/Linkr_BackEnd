@@ -6,7 +6,7 @@ import {
 
 export async function newFollower(req, res) {
 	const { tokenDecoded } = res.locals;
-	const { id } = req.body;
+	const id = parseInt(req.body.id);
 
 	try {
 		const { rows: alreadyFollowing } = await isFollowing(tokenDecoded.id, id);
