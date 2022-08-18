@@ -13,7 +13,7 @@ export async function createPost(userId, url, text, title, image, description) {
 }
 
 export async function getAllPosts(userId, page) {
-  console.log(page)
+  
 	return connection.query(
 		`
       (SELECT 
