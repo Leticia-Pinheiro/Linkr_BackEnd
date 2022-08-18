@@ -168,10 +168,8 @@ export async function getRecentPosts(req, res) {
 			tokenDecoded.id,
 			lastPostCreatedAt
 		);
-
-		const { rows: posts} = await recentPosts(tokenDecoded.id, lastPostCreatedAt);
 		posts.pop();
-		res.status(200).send(posts)
+		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);
 	}
