@@ -48,12 +48,6 @@ export async function publishPost(req, res) {
 
 			await hashtagArr.forEach(async (hashtag) => await createHashtag(hashtag));
 
-			// await Promise.all(
-			// 	await hashtagArr.map(
-			// 		async (hashtag) => await PostByHashtag(hashtag, idFromNewPost[0].id)
-			// 	)
-			// );
-
 			for await (const hashtag of hashtagArr) {
 				await PostByHashtag(hashtag, idFromNewPost[0].id);
 			}
