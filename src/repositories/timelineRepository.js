@@ -240,6 +240,7 @@ export async function recentPosts(userId, lastPostCreatedAt) {
       WHERE follow."userId" = $1 AND posts."createdAt" > $2
       ORDER BY "createdAt" DESC)
       ORDER BY "createdAt" DESC
+      LIMIT 10 * $2
     `,
 		[userId, lastPostCreatedAt]
 	);
