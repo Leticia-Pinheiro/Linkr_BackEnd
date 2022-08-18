@@ -35,7 +35,7 @@ export async function searchHashtag(hashtag) {
 	);
 }
 
-export async function getAllPostsFromHashtag(idFromCurrentUser, hashtag) {
+export async function getAllPostsFromHashtag(idFromCurrentUser, hashtag, page) {
 	return await connection.query(
 		`
         SELECT 
@@ -74,9 +74,9 @@ export async function getAllPostsFromHashtag(idFromCurrentUser, hashtag) {
       users.email,
       users."imageUrl"
     ORDER BY posts."createdAt" DESC
-    LIMIT 20
+    LIMIT 10 * $3
 `,
-		[idFromCurrentUser, hashtag]
+		[idFromCurrentUser, hashtag, page]
 	);
 }
 

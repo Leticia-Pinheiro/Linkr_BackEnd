@@ -12,7 +12,7 @@ export async function createPost(userId, url, text, title, image, description) {
 	);
 }
 
-export async function getAllPosts(userId) {
+export async function getAllPosts(userId, page) {
 	return connection.query(
 		`
     SELECT 
@@ -48,13 +48,13 @@ export async function getAllPosts(userId) {
       users.email,
       users."imageUrl"
     ORDER BY posts."createdAt" DESC
-    LIMIT 20
+    LIMIT 10 * $2
     `,
-		[userId]
+		[userId, page]
 	);
 }
 
-export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost) {
+export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost, page) {
 	return connection.query(
 		`
     SELECT 
@@ -90,9 +90,9 @@ export async function getAllPostsFromUser(idFromCurrentUser, idFromUserPost) {
       users.email,
       users."imageUrl"
     ORDER BY posts."createdAt" DESC
-    LIMIT 20
+    LIMIT 10 * $3
 `,
-		[idFromCurrentUser, idFromUserPost]
+		[idFromCurrentUser, idFromUserPost, page]
 	);
 }
 
