@@ -196,7 +196,7 @@ export async function recentPosts(userId, lastPostCreatedAt) {
       JOIN users 
       ON users.id = posts."userId"
       JOIN follow
-      ON follow."followingUserId" = repost."userId"
+      ON repost."userId" = $1 or follow."followingUserId" = repost."userId" and follow."userId" = $1
       GROUP BY 
         posts.id, 
         posts."createdAt",
