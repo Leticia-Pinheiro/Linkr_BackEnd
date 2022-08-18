@@ -48,10 +48,6 @@ export async function publishPost(req, res) {
 
 			await hashtagArr.forEach(async (hashtag) => await createHashtag(hashtag));
 
-			await hashtagArr.map(
-				async (hashtag) => await PostByHashtag(hashtag, idFromNewPost[0].id)
-			);
-
 			await Promise.all(
 				await hashtagArr.map(
 					async (hashtag) => await PostByHashtag(hashtag, idFromNewPost[0].id)
@@ -178,14 +174,13 @@ export async function getRecentPosts(req, res) {
 	const { lastPostCreatedAt } = req.body;
 
 	try {
-		console.log('ok')
 		const { rows: posts } = await recentPosts(
 			tokenDecoded.id,
 			lastPostCreatedAt
 		);
-		console.log("1 :", posts);
+
 		posts.pop();
-		console.log("2 :", posts);
+
 		res.status(200).send(posts);
 	} catch (error) {
 		res.sendStatus(500);
