@@ -177,7 +177,7 @@ export async function getRecentPosts(req, res) {
 			lastPostCreatedAt
 		);
 
-		posts.pop();
+		// posts.pop();
 
 		res.status(200).send(posts);
 	} catch (error) {
