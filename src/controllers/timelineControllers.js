@@ -173,6 +173,7 @@ export async function getRecentPosts(req, res) {
 			tokenDecoded.id,
 			lastPostCreatedAt
 		);
+		console.log(posts)
 		posts.pop();
 		res.status(200).send(posts);
 	} catch (error) {
