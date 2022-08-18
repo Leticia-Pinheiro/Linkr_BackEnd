@@ -12,14 +12,12 @@ export async function createHashtag(name) {
 }
 
 export async function PostByHashtag(hashtag, idPost) {
-	// console.log(hashtag + " > " + idPost);
 	const { rows: idHashtag } = await connection.query(
 		`SELECT (id) FROM hashtags WHERE name = $1`,
 		[hashtag]
 	);
-	// console.log(idHashtag);
+
 	if (idHashtag.length) {
-		// console.log("a");
 		await connection.query(
 			`INSERT INTO post_hashtag (post_id, hashtag_id) VALUES ($1, $2)`,
 			[idPost, idHashtag[0].id]
