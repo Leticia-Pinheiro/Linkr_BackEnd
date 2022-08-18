@@ -60,10 +60,12 @@ export async function publishPost(req, res) {
 }
 
 export async function getPosts(req, res) {
+	
 	const { tokenDecoded } = res.locals;
-
+	const { page } = req.query;
+	
 	try {
-		const { rows: posts } = await getAllPosts(tokenDecoded.id);
+		const { rows: posts } = await getAllPosts(tokenDecoded.id, page);
 
 		const { rows: followers } = await followersFromUser(tokenDecoded.id);
 
@@ -76,13 +78,14 @@ export async function getPosts(req, res) {
 export async function getPostsFromUser(req, res) {
 	const { tokenDecoded } = res.locals;
 	const { id } = req.params;
+	const { page } = req.query;
 
 	try {
 		const { rows: user } = await searchUserById(id);
 
 		if (!user.length) return res.sendStatus(404);
 
-		const { rows: posts } = await getAllPostsFromUser(tokenDecoded.id, id);
+		const { rows: posts } = await getAllPostsFromUser(tokenDecoded.id, id, page);
 
 		res.status(200).send(posts);
 	} catch (error) {
@@ -142,6 +145,7 @@ export async function getHashtags(req, res) {
 export async function getPostsFromHashtag(req, res) {
 	const { tokenDecoded } = res.locals;
 	const { hashtag } = req.params;
+	const { page } = req.query;
 
 	try {
 		const { rows: infoHashtag } = await searchHashtag(hashtag);
@@ -150,7 +154,8 @@ export async function getPostsFromHashtag(req, res) {
 
 		const { rows: posts } = await getAllPostsFromHashtag(
 			tokenDecoded.id,
-			hashtag
+			hashtag,
+			page
 		);
 
 		res.status(200).send(posts);
