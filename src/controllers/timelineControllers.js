@@ -46,9 +46,9 @@ export async function publishPost(req, res) {
 		if (hashtag) {
 			const hashtagArr = await hashtag.map((hashtag) => hashtag.slice(1));
 
-			await hashtagArr.map(async (hashtag) => await createHashtag(hashtag));
+			await hashtagArr.forEach(async (hashtag) => await createHashtag(hashtag));
 
-			await hashtagArr.map(
+			await hashtagArr.forEach(
 				async (hashtag) => await PostByHashtag(hashtag, idFromNewPost[0].id)
 			);
 		}
@@ -60,10 +60,9 @@ export async function publishPost(req, res) {
 }
 
 export async function getPosts(req, res) {
-	
 	const { tokenDecoded } = res.locals;
 	const { page } = req.query;
-	
+
 	try {
 		const { rows: posts } = await getAllPosts(tokenDecoded.id, page);
 
@@ -85,7 +84,11 @@ export async function getPostsFromUser(req, res) {
 
 		if (!user.length) return res.sendStatus(404);
 
-		const { rows: posts } = await getAllPostsFromUser(tokenDecoded.id, id, page);
+		const { rows: posts } = await getAllPostsFromUser(
+			tokenDecoded.id,
+			id,
+			page
+		);
 
 		res.status(200).send(posts);
 	} catch (error) {
