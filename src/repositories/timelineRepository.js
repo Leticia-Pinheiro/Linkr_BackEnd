@@ -245,7 +245,7 @@ export async function recentPosts(userId, lastPostCreatedAt) {
       ORDER BY "createdAt" DESC)
       ORDER BY "createdAt" DESC
     `,
-		[userId, lastPostCreatedAt]
+		[userId, lastPostCreatedAt.replace('T', ' ').replace('Z', '')]
 	);
 
 	return post;
