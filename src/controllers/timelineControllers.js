@@ -169,6 +169,7 @@ export async function getRecentPosts(req, res) {
 	const { lastPostCreatedAt } = req.body;
 
 	try {
+		console.log('ok')
 		const { rows: posts } = await recentPosts(
 			tokenDecoded.id,
 			lastPostCreatedAt
