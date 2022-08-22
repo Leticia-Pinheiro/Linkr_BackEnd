@@ -1,0 +1,702 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.12 (Ubuntu 12.12-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.12 (Ubuntu 12.12-0ubuntu0.20.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: comments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    text text NOT NULL,
+    "userId" integer NOT NULL,
+    "postId" integer NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.comments OWNER TO postgres;
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.comments_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.comments_id_seq OWNER TO postgres;
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
+
+
+--
+-- Name: follow; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.follow (
+    id integer NOT NULL,
+    "userId" integer NOT NULL,
+    "followingUserId" integer NOT NULL,
+    following boolean DEFAULT false NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.follow OWNER TO postgres;
+
+--
+-- Name: follow_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.follow_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.follow_id_seq OWNER TO postgres;
+
+--
+-- Name: follow_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.follow_id_seq OWNED BY public.follow.id;
+
+
+--
+-- Name: hashtags; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.hashtags (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE public.hashtags OWNER TO postgres;
+
+--
+-- Name: hashtags_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.hashtags_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.hashtags_id_seq OWNER TO postgres;
+
+--
+-- Name: hashtags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.hashtags_id_seq OWNED BY public.hashtags.id;
+
+
+--
+-- Name: likes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.likes (
+    id integer NOT NULL,
+    "userId" integer NOT NULL,
+    "postId" integer NOT NULL,
+    liked boolean DEFAULT false NOT NULL
+);
+
+
+ALTER TABLE public.likes OWNER TO postgres;
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.likes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.likes_id_seq OWNER TO postgres;
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.likes_id_seq OWNED BY public.likes.id;
+
+
+--
+-- Name: post_hashtag; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.post_hashtag (
+    id integer NOT NULL,
+    post_id integer NOT NULL,
+    hashtag_id integer NOT NULL
+);
+
+
+ALTER TABLE public.post_hashtag OWNER TO postgres;
+
+--
+-- Name: post_hashtag_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.post_hashtag_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.post_hashtag_id_seq OWNER TO postgres;
+
+--
+-- Name: post_hashtag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.post_hashtag_id_seq OWNED BY public.post_hashtag.id;
+
+
+--
+-- Name: posts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.posts (
+    id integer NOT NULL,
+    "userId" integer NOT NULL,
+    url text NOT NULL,
+    text text,
+    "urlTitle" text,
+    "urlImage" text,
+    "urlDescription" text,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.posts OWNER TO postgres;
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.posts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.posts_id_seq OWNER TO postgres;
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.posts_id_seq OWNED BY public.posts.id;
+
+
+--
+-- Name: repost; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.repost (
+    id integer NOT NULL,
+    "repostFrom" text NOT NULL,
+    "userId" integer NOT NULL,
+    "postId" integer NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.repost OWNER TO postgres;
+
+--
+-- Name: repost_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.repost_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.repost_id_seq OWNER TO postgres;
+
+--
+-- Name: repost_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.repost_id_seq OWNED BY public.repost.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(120) NOT NULL,
+    email character varying(120) NOT NULL,
+    password text NOT NULL,
+    "imageUrl" text NOT NULL,
+    "createdAt" date DEFAULT '2022-08-09'::date NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: comments id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.comments_id_seq'::regclass);
+
+
+--
+-- Name: follow id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.follow ALTER COLUMN id SET DEFAULT nextval('public.follow_id_seq'::regclass);
+
+
+--
+-- Name: hashtags id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hashtags ALTER COLUMN id SET DEFAULT nextval('public.hashtags_id_seq'::regclass);
+
+
+--
+-- Name: likes id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likes ALTER COLUMN id SET DEFAULT nextval('public.likes_id_seq'::regclass);
+
+
+--
+-- Name: post_hashtag id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.post_hashtag ALTER COLUMN id SET DEFAULT nextval('public.post_hashtag_id_seq'::regclass);
+
+
+--
+-- Name: posts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts ALTER COLUMN id SET DEFAULT nextval('public.posts_id_seq'::regclass);
+
+
+--
+-- Name: repost id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.repost ALTER COLUMN id SET DEFAULT nextval('public.repost_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.comments (id, text, "userId", "postId", "createdAt") FROM stdin;
+1	aa	1	1	2022-08-18 09:47:41.89523
+2	bb	2	1	2022-08-18 11:11:49.788053
+3	cc	3	1	2022-08-18 11:16:49.35783
+7	teste	1	1	2022-08-18 12:50:42.023956
+8	teste1	1	1	2022-08-18 12:55:16.115925
+9	teste2	1	1	2022-08-18 15:02:03.744729
+10	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	1	1	2022-08-18 16:46:44.255491
+11	teste1	1	2	2022-08-18 16:54:27.865649
+12	teste1	1	2	2022-08-18 16:54:31.774369
+13		1	2	2022-08-18 16:54:52.983288
+14	teste3	1	2	2022-08-19 08:52:34.339678
+15	teste4	1	2	2022-08-19 08:52:43.899766
+16	teste5	1	2	2022-08-19 08:53:44.870439
+\.
+
+
+--
+-- Data for Name: follow; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.follow (id, "userId", "followingUserId", following, "createdAt") FROM stdin;
+1	1	2	t	2022-08-16 18:14:36.788268-03
+2	3	2	t	2022-08-16 19:11:13.298164-03
+3	2	3	t	2022-08-17 14:01:16.366556-03
+10	2	1	t	2022-08-18 14:02:38.002996-03
+\.
+
+
+--
+-- Data for Name: hashtags; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.hashtags (id, name) FROM stdin;
+6	teste
+14	teste1
+15	teste2
+16	teste3
+17	teste4
+18	teste5
+19	teste6
+20	teste7
+21	teste8
+22	teste9
+23	teste10
+24	teste13
+25	teste14
+26	teste15
+27	teste16
+28	teste17
+29	teste18
+30	teste19
+31	teste20
+32	{}
+\.
+
+
+--
+-- Data for Name: likes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.likes (id, "userId", "postId", liked) FROM stdin;
+11	1	2	t
+12	1	1	t
+\.
+
+
+--
+-- Data for Name: post_hashtag; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.post_hashtag (id, post_id, hashtag_id) FROM stdin;
+43	29	6
+44	29	14
+45	29	15
+46	29	16
+47	29	17
+\.
+
+
+--
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.posts (id, "userId", url, text, "urlTitle", "urlImage", "urlDescription", "createdAt") FROM stdin;
+1	2	https://github.com/Leticia-Pinheiro/Linkr_BackEnd/pull/24		feat: show posts only from followers by williameiji · Pull Request #24 · Leticia-Pinheiro/Linkr_BackEnd	https://opengraph.githubassets.com/5a9a38f94005446b8c3b9871c3c5eec62fa5b6f3ba8ce9c292616fffe8f602cc/Leticia-Pinheiro/Linkr_BackEnd/pull/24	Contribute to Leticia-Pinheiro/Linkr_BackEnd development by creating an account on GitHub.	2022-08-16 17:38:25.451939
+2	3	https://github.com/Leticia-Pinheiro/Linkr_FrontEnd/pull/33		change api by williameiji · Pull Request #33 · Leticia-Pinheiro/Linkr_FrontEnd	https://opengraph.githubassets.com/9bd4297579f747a26ce286589c11e00a40a15c02f3ad88ab5f156d52d3b659e0/Leticia-Pinheiro/Linkr_FrontEnd/pull/33	Contribute to Leticia-Pinheiro/Linkr_FrontEnd development by creating an account on GitHub.	2022-08-16 19:11:31.326948
+29	1	https://shortly-back.herokuapp.com/urls/open/pgEEN9	#teste #teste1 #teste2 #teste3 #teste4 #teste5	\N			2022-08-19 08:55:53.898902
+\.
+
+
+--
+-- Data for Name: repost; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.repost (id, "repostFrom", "userId", "postId", "createdAt") FROM stdin;
+19	eiji	2	2	2022-08-17 14:58:10.773473
+20	williameiji	1	1	2022-08-17 15:01:30.459005
+21	williameiji	1	2	2022-08-17 15:19:41.483308
+1	williameiji	1	1	2022-08-19 08:54:31.941855
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, username, email, password, "imageUrl", "createdAt") FROM stdin;
+1	williameiji	william@driven.com.br	$2b$10$ncoWWMSCk6ag/Mo7mYdimeTP7sHESND2pmDO2TkPSsvAk/li0qxGi	https://shortly-back.herokuapp.com/urls/open/pgEEN9	2022-08-09
+2	eiji	eiji@driven.com.br	$2b$10$/8xcN.C7JG195wEGkMUmOuFgt5bIMHXShBaj5qYLooRhHOFGFFxWu	https://shortly-back.herokuapp.com/urls/open/e1cCxz	2022-08-09
+3	eijiiii	teste@driven.com.br	$2b$10$3AwTy4xGd/FVH2xeGMrvu.MISmgqVrhqWGrnhrhMDCydQOeKsvvMq	https://shortly-back.herokuapp.com/urls/open/vF17uc	2022-08-09
+\.
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.comments_id_seq', 17, true);
+
+
+--
+-- Name: follow_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.follow_id_seq', 10, true);
+
+
+--
+-- Name: hashtags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.hashtags_id_seq', 32, true);
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.likes_id_seq', 12, true);
+
+
+--
+-- Name: post_hashtag_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.post_hashtag_id_seq', 47, true);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.posts_id_seq', 29, true);
+
+
+--
+-- Name: repost_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.repost_id_seq', 1, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 3, true);
+
+
+--
+-- Name: comments comments_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_pk PRIMARY KEY (id);
+
+
+--
+-- Name: follow follow_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.follow
+    ADD CONSTRAINT follow_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hashtags hashtags_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hashtags
+    ADD CONSTRAINT hashtags_name_key UNIQUE (name);
+
+
+--
+-- Name: hashtags hashtags_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.hashtags
+    ADD CONSTRAINT hashtags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: likes likes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: post_hashtag post_hashtag_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.post_hashtag
+    ADD CONSTRAINT post_hashtag_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repost repost_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.repost
+    ADD CONSTRAINT repost_pk PRIMARY KEY (id);
+
+
+--
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users users_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pk PRIMARY KEY (id);
+
+
+--
+-- Name: comments comments_postId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT "comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES public.posts(id) ON DELETE CASCADE;
+
+
+--
+-- Name: comments comments_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
+
+
+--
+-- Name: follow follow_followingUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.follow
+    ADD CONSTRAINT "follow_followingUserId_fkey" FOREIGN KEY ("followingUserId") REFERENCES public.users(id);
+
+
+--
+-- Name: follow follow_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.follow
+    ADD CONSTRAINT "follow_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
+
+
+--
+-- Name: likes likes_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT "likes_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
+
+
+--
+-- Name: post_hashtag post_hashtag_hashtag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.post_hashtag
+    ADD CONSTRAINT post_hashtag_hashtag_id_fkey FOREIGN KEY (hashtag_id) REFERENCES public.hashtags(id);
+
+
+--
+-- Name: posts posts_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT "posts_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
+
+
+--
+-- Name: repost repost_postId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.repost
+    ADD CONSTRAINT "repost_postId_fkey" FOREIGN KEY ("postId") REFERENCES public.posts(id) ON DELETE CASCADE;
+
+
+--
+-- Name: repost repost_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.repost
+    ADD CONSTRAINT "repost_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
